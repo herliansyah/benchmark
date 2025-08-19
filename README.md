@@ -31,6 +31,11 @@ Catatan teknis / keamanan penting
 - Kredensial MySQL dapat diberikan lewat form GET. Jangan mengekspos server publik tanpa proteksi karena kredensial akan lewat URL.
 - Skrip menulis file sementara (`benchmark_testfile.tmp`) untuk pengujian disk dan akan mencoba menghapusnya setelah berjalan.
 
+Additional cleanup behavior
+--------------------------
+- Setelah menyelesaikan pengujian MySQL, skrip akan mencoba menghapus tabel sementara yang dibuat untuk run tersebut (nama seperti `benchmark_<timestamp>`). Ini dilakukan agar database `testdb` kembali bersih setelah benchmark.
+- Hasil JSON akan menyertakan properti `mysql.table_dropped` yang berisi `true` jika tabel berhasil dihapus, `false` jika penghapusan gagal, atau `null` jika lingkungan runtime tidak mendukung fungsi `mysql_*` (mis. PHP7+ tanpa ekstensi kompatibel).
+
 Cara menjalankan
 ---------------
 1) Salin seluruh folder/`benchmark.php` ke server PHP Anda.

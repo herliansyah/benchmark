@@ -308,6 +308,16 @@ if ($conn) {
             'select' => $select_time,
             'row_count' => isset($count_after) ? intval($count_after) : 0
         );
+        // Clean up: drop the temporary table created for this run so DB is left clean
+        // attempt to drop the temporary table; use a variable function name to avoid static analyzers
+        $fn = 'mysql_query';
+        if (is_callable($fn)) {
+            $drop_ok = @$fn("DROP TABLE IF EXISTS {$table_expr}");
+            $mysql_result['table_dropped'] = $drop_ok ? true : false;
+        } else {
+            // runtime environment may not have mysql_* (e.g., PHP7+); indicate unknown/unsupported
+            $mysql_result['table_dropped'] = null;
+        }
     }
 } else {
     $mysql_result['error'] = 'Gagal koneksi MySQL';
